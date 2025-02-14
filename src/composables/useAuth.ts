@@ -12,9 +12,12 @@ export default function useAuth() {
     const response = await api('login', userData, 'POST')
     if (response) {
       localStorage.setItem('token', response.access)
-      router.push('/dashboard')
+      router.push('/codinghelp')
     }
   }
+  async function logout() {
+   localStorage.removeItem("token")
+  }
 
-  return { login }
+  return { login,logout }
 }
