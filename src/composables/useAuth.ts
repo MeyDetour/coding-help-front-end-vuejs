@@ -9,10 +9,11 @@ export default function useAuth() {
 
   async function login(userData: { email: string; password: string }) {
     console.log("let's login ")
-    const response = await api('login', userData, 'POST')
+    let response = await api('login', userData, 'POST')
+    response = await response.json()
     if (response) {
       localStorage.setItem('token', response.access)
-      router.push('/codinghelp')
+      await router.push('/private/dashboard')
     }
   }
   async function logout() {

@@ -28,8 +28,6 @@ function onSubmit() {
 </script>
 <template>
   <form @submit.prevent="onSubmit" class="loginPage basicForm">
-    <span>email : {{ state.email }}</span>
-    <span>password : {{ state.password }}</span>
     <h1>
       <img src="../../assets/logo.svg" alt="" />
       <span class="titleSpan1">Coding</span>

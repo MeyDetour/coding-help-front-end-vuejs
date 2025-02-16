@@ -1,0 +1,140 @@
+.contentTextAreaMarkdown{
+
+    position: relative;
+    font-weight: 500;width: 100%;
+
+}
+
+.contentTextAreaMarkdown textarea{
+resize: none;
+    min-height: 50vh;
+
+}
+
+
+.contentTextAreaMarkdown .listOFOptions {
+
+    position: absolute;
+    left: 1px;
+    top: 1px;
+    display: flex;
+    flex-direction: row;
+    list-style-type: none;
+    gap: 10px;
+    width: 100%;
+    background: var(--black-second-background);
+    margin: 0;
+    box-sizing: border-box;
+    border-radius: 9px;
+    padding: 12px 34px;
+    width: 99%;
+}
+
+
+.contentTextAreaMarkdown .listOFOptions li {
+    cursor: pointer;
+    width: 31px;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
+
+
+.contentTextAreaMarkdown .listOFOptions .toItalic{
+    font-style: italic;
+}
+
+.contentTextAreaMarkdown .listOFOptions{}
+.contentTextAreaMarkdown .listOFOptions{}
+.contentTextAreaMarkdown .listOFOptions{}
+
+
+
+.contentTextAreaMarkdown {}
+.contentTextAreaMarkdown {}
+.contentTextAreaMarkdown {}
+.contentTextAreaMarkdown {}
+
+
+
+/* result of textarea markdown */
+
+.resultOFTextAreaMarkdown{
+    width: 100%;
+}
+.resultOFTextAreaMarkdown h3{
+    background: transparent !important;
+    width: fit-content !important;
+    padding: initial !important;
+}
+
+.resultOFTextAreaMarkdown a{
+    text-decoration: underline;
+    color: var(--blue);
+}.resultOFTextAreaMarkdown a:hover{
+    color: var(--dark-blue);
+}
+
+ .resultOFTextAreaMarkdown .resultOFTextAreaMarkdown_pre{
+     background: var(--black-third-background);
+     padding: 33px 15px;
+     border-radius: 10px;
+     font-size: 16px;
+     position: relative;
+
+     clip-path: border-box;
+     overflow-x: auto;
+ }
+
+ .resultOFTextAreaMarkdown .resultOFTextAreaMarkdown_pre .language{
+     color: var(--grey);
+     text-shadow: white 1px 1px 2px;
+     position: absolute;
+     top: 10px;
+     right: 15px;
+ }
+
+
+.resultOFTextAreaMarkdown .blue {
+    color: blue;
+}
+
+.resultOFTextAreaMarkdown .green {
+    color: green;
+}
+
+.resultOFTextAreaMarkdown .purple {
+    color: purple;
+}
+
+.resultOFTextAreaMarkdown .orange {
+    color: orange;
+}
+
+.resultOFTextAreaMarkdown .red {
+    color: red;
+}
+
+.resultOFTextAreaMarkdown .darkred {
+    color: darkred;
+}
+
+.resultOFTextAreaMarkdown .teal {
+    color: teal;
+}
+
+.resultOFTextAreaMarkdown .gold {
+    color: gold;
+}
+
+.resultOFTextAreaMarkdown .brown {
+    color: brown;
+}
+
+.resultOFTextAreaMarkdown .pink {
+    color: pink;
+}
+
+.resultOFTextAreaMarkdown .black {
+    color: black;
+}

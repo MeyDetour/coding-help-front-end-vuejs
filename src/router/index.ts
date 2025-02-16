@@ -16,7 +16,7 @@ const router = createRouter({
       name: 'login',
       component: LoginView,
     },   {
-      path: '/codinghelp',
+      path: '/private/:subpage/:catchAll(.*)*',
       name: 'codinghelp',
       component: BaseView,
     },

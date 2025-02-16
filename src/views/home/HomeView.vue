@@ -1,7 +1,15 @@
 <script setup lang="ts">
 import "./home.css"
 import { RouterLink } from 'vue-router'
+import { ref } from 'vue'
 
+const renderLogin = ref(true)
+isThereToken()
+function isThereToken(){
+  if ( localStorage.getItem("token")){
+    renderLogin.value = false
+  }
+}
 
 </script>
 
@@ -12,8 +20,9 @@ import { RouterLink } from 'vue-router'
     <img src="../../assets/logo.svg" alt="logo coding help"/>
     <div>
 
-      <RouterLink class="button0"  to="/login">Login</RouterLink>
-      <RouterLink class="button1" to="/register">Register</RouterLink>
+      <RouterLink v-if="renderLogin" class="button0"  to="/login">Login</RouterLink>
+      <RouterLink v-if="renderLogin"  class="button1" to="/register">Register</RouterLink>
+      <RouterLink v-if="!renderLogin"  class="button1" to="/private/dashboard">Acceed</RouterLink>
     </div>
   </div>
 

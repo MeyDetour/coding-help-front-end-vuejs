@@ -10,7 +10,7 @@ defineProps({
 
 <template>
     <div class="rowForList">
-  <span>{{name}}}</span>
+  <span>{{name}}</span>
   <div class="icons">
     <div>
       <img src="../assets/icon/people.svg" alt="contributor icon"/>
@@ -18,8 +18,8 @@ defineProps({
     </div>
 
     <div>
-      <img v-if="type=='themes'" src="../assets/icon/question.svg" alt="question icon"/>}
-      <img v-if="type=='question'" src="../assets/icon/clue.svg" alt="question responses"/>}
+      <img v-if="type=='themes'" src="../assets/icon/question.svg" alt="question icon"/>
+      <img v-if="type=='question'" src="../assets/icon/clue.svg" alt="question responses"/>
       <span>{{number2}}</span>
     </div>
 
