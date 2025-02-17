@@ -25,8 +25,8 @@ You can also add a code block like this:
 ~~~~python
 
 def split_lines(s):
-return s.split
-split_lines('50 python snippets')
+  split_lines('50 python snippets')
+  return s.split
 
 ~~~~
   `,
@@ -133,42 +133,6 @@ const onSubmit = async () => {
   console.log('===========================================================')
 }
 
-const getMarkdownHTML = (content) => {
-  let codeBlock = [...content.matchAll(/~~~~(\w+)?\s([\s\S]*?)~~~~/g)]
-
-  codeBlock.forEach((matchedTitle) => {
-    content = content.replace(
-      matchedTitle[0],
-      `<pre class="resultOFTextAreaMarkdown_pre language-${matchedTitle[1]}" ><span class="language">${matchedTitle[1]}</span> <code>${matchedTitle[2]}</code></pre>`,
-    )
-  })
-
-  let preBlocks = [
-    ...content.matchAll(/<pre class="resultOFTextAreaMarkdown_pre.*?">([\s\S]*?)<\/pre>/g),
-  ]
-  preBlocks.forEach((block, index) => {
-    content = content.replace(block[0], `{{PRE_BLOCK_${index}}}`)
-  })
-
-  let html = marked(content)
-  let titles1 = [...html.matchAll(/#\s+([^\n]+)/g)]
-  titles1.forEach((matchedTitle) => {
-    html = html.replace(matchedTitle[0], `<h1>${matchedTitle[1]}</h1>`)
-  })
-  let titles2 = [...html.matchAll(/##\s+([^\n]+)/g)]
-  titles2.forEach((matchedTitle) => {
-    html = html.replace(matchedTitle[0], `<h2>${matchedTitle[1]}</h2>`)
-  })
-  let titles3 = [...html.matchAll(/###\s+([^\n]+)/g)]
-  titles3.forEach((matchedTitle) => {
-    html = html.replace(matchedTitle[0], `<h3>${matchedTitle[1]}</h3>`)
-  })
-  preBlocks.forEach((block, index) => {
-    html = html.replace(`{{PRE_BLOCK_${index}}}`, block[0])
-  })
-
-  return html
-}
 </script>
 
 <template>
@@ -185,22 +149,6 @@ const getMarkdownHTML = (content) => {
         Content
         <content-text-area-markdown
           v-model="newQuestion.content"
-          :valueText="`# Welcome to CodingHelp!
-
-          Here is an example of the Markdown you can write in your question:
-
-          [Example of link](https://youtu.be/xvFZjo5PgG0?si=I-iwvAlNFsjmxL3K) — you can just click on this link!
-
-        You can also add a code block like this:
-
-        ~~~~python
-
-        def split_lines(s):
-        return s.split
-        split_lines('50 python snippets')
-
-        ~~~~
-        `"
         ></content-text-area-markdown>
       </label>
 
@@ -215,7 +163,7 @@ const getMarkdownHTML = (content) => {
             v-model="newQuestion.themes"
           />
 
-          <span :for="theme.id">{{ theme.name }}</span>
+          <span>{{ theme.name }}</span>
         </div>
       </fieldset>
       <label>
@@ -231,7 +179,7 @@ const getMarkdownHTML = (content) => {
 
     <result-of-text-area-markdown
       v-if="newQuestion.content"
-      :text="getMarkdownHTML(newQuestion.content)"
+      :text="newQuestion.content"
       classname=""
     ></result-of-text-area-markdown>
   </div>

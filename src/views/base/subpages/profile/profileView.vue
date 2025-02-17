@@ -4,13 +4,14 @@ import CustomImage from '@/components/CustomImage.vue'
 import useApi from '@/composables/useApi.ts'
 import { ref } from 'vue'
 import ProfileSectionView from '@/views/base/subpages/profile/profileSectionView.vue'
+import type { User } from '@/type/User.ts'
 
 
 const props = defineProps<{
   changeRoute: (routePath: string, subpageName: string, idNumber: number | null) => void
 }>()
 const { api } = useApi()
-const profile = ref({})
+const profile = ref<User>()
 
 const fetchData = async () => {
   try {
@@ -40,5 +41,5 @@ fetchData()
   </div>
 
   <div class="hr"></div>
-  <profile-section-view :changeRoute="changeRoute" :profile="profile"></profile-section-view>
+  <profile-section-view v-if="profile" :changeRoute="changeRoute" :profile="profile"></profile-section-view>
 </template>

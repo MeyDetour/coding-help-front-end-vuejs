@@ -5,61 +5,64 @@ import ListOfQuestions from '@/components/listOfQuestions.vue'
 import type { Question } from '@/type/Question.ts'
 import ListOfUsersView from '@/components/listOfUsersView.vue'
 import ListOfResponseView from '@/components/listOfResponseView.vue'
+import type { User } from '@/type/User.ts'
 
 
 
 const props = defineProps<{
-  profile : object,
+  profile : User,
   changeRoute: (routePath: string, subpageName: string, idNumber: number | null) => void
 }>()
-
-let subpageOdProfile = ref('questions')
 const { api } = useApi()
 let data = ref()
-watch(subpageOdProfile, changeSubpage(subpageOdProfile))
-changeSubpage(subpageOdProfile)
+let subpageOfProfile = ref('questions')
 
 
-const changeSubpage = async function (subpageOdProfile) {
+const changeSubpage = async function (subpage: string) {
   try {
+    console.log("charge data for ",subpage)
     data.value = []
-    const res = await api('api/profile/' + subpageOdProfile, null, 'GET')
+    const res = await api('api/profile/' + subpage, null, 'GET')
     data.value = await res.json()
-    subpageOdProfile.value = subpageOdProfile
+
+    subpageOfProfile.value = subpage
+    console.log(data.value)
   } catch (err) {
-    console.log('Error while fetching profile data : ' + err.message)
+    console.log('Error while fetching profile data : ' + err)
   }
 }
+
+changeSubpage(subpageOfProfile.value)
 </script>
 
 <template>
   <div class="section2"  >
     <ul>
       <li @click="changeSubpage('questions')">
-        <span :class="`md-text  ${subpageOdProfile === 'questions' ? 'focus' : ' '}`">Questions</span>
+        <span :class="`md-text  ${subpageOfProfile === 'questions' ? 'focus' : ' '}`">Questions</span>
         <span class="lg-text">{{profile.questions_count}}</span>
       </li>
       <li @click="changeSubpage('followings')">
-        <span :class="`md-text ${subpageOdProfile === 'followings' ? 'focus' : ' '}`">Followings</span>
+        <span :class="`md-text ${subpageOfProfile === 'followings' ? 'focus' : ' '}`">Followings</span>
         <span class="lg-text">{{ profile.followings_count }}</span>
       </li>
       <li @click="changeSubpage('followers')">
-        <span :class="`md-text ${subpageOdProfile === 'followers' ? 'focus' : ' '}`">Followers</span>
+        <span :class="`md-text ${subpageOfProfile === 'followers' ? 'focus' : ' '}`">Followers</span>
         <span class="lg-text">{{ profile.followers_count }}</span>
       </li>
       <li @click="changeSubpage('responses')">
-        <span :class="`md-text ${subpageOdProfile === 'responses' ? 'focus' : ' '} `">Responses</span>
+        <span :class="`md-text ${subpageOfProfile === 'responses' ? 'focus' : ' '} `">Responses</span>
         <span class="lg-text">{{ profile.responses_count }}</span>
       </li>
     </ul>
 
-    <list-of-questions v-if="subpageOdProfile =='questions' " :change-route="changeRoute" :listOfQuestions="data as Question[]"></list-of-questions>
+    <list-of-questions v-if="subpageOfProfile =='questions'   && data" :change-route="changeRoute" questionShape="questionInProfile" :listOfQuestions="data as Question[]"></list-of-questions>
 
-    <list-of-users-view  v-if="subpageOdProfile =='followings' "  :change-route="changeRoute"  :listOfUsersData="data"></list-of-users-view>
+    <list-of-users-view  v-if="subpageOfProfile =='followings'  && data "  :change-route="changeRoute" :own-id="profile.id"  :listOfUsersData="data as User[]" user-type="followings" ></list-of-users-view>
 
-    <list-of-users-view   v-if="subpageOdProfile =='followers'"  :change-route="changeRoute"  :listOfUsersData="data"></list-of-users-view>
+    <list-of-users-view   v-if="subpageOfProfile =='followers'  && data "  :change-route="changeRoute" :own-id="profile.id" :listOfUsersData="data as User[]" user-type="followers"></list-of-users-view>
 
-    <list-of-response-view  v-if="subpageOdProfile =='responses'"  :change-route="changeRoute"  :list-of-response="data"></list-of-response-view>
+    <list-of-response-view  v-if="subpageOfProfile =='responses'  && data"  :change-route="changeRoute"  :list-of-response="data as Response[] "></list-of-response-view>
 
   </div>
 </template>

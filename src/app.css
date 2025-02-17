@@ -271,7 +271,15 @@ a {
     justify-content: space-between;
     background-color: var(--black-second-background);
 }
-
+.rowForList .badge{
+    color: var(--grey);
+    background: #3a3a3a;
+    padding: 5px;
+    box-sizing: border-box;
+    border-radius: 7px;
+    margin-inline: 5px;
+    cursor: pointer;
+}
 .rowForList .icons {
     display: flex;
     flex-direction: row;

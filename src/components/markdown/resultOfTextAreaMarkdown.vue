@@ -1,8 +1,10 @@
 <script setup lang="ts">
 
-import { watch } from 'vue'
+import { nextTick, watch } from 'vue'
 import "./contentTextAreaMarkdown.css"
+import { marked } from 'marked'
 
+console.log("renderResult of markdown")
 const props = defineProps<{
 classname:string,
   text:string
@@ -19,12 +21,8 @@ classname:string,
     *
     * */
 
-watch(props,()=>{addLanguageColor()})
 
-function addLanguageColor(){
-
-  document.querySelectorAll(".language-python code").forEach((pre) => {
-    console.log(pre);
+function addLanguageColor(content:string) {
     const language = {
       class: "green",
       return: "purple",
@@ -46,26 +44,58 @@ function addLanguageColor(){
       with: "brown",
       lambda: "pink"
     }
-    Object.entries(language).forEach((elt) => {
+    Object.entries(language).forEach(([key, color]) => {
+      const regex = new RegExp(`\\b${key}\\b(\\s|:|\\()`, 'g');
+      content = content.replace(regex, (match) => {
+        return `<span class="${color}">${key}</span>${match.slice(key.length)}`;
+      });
+    });
 
-      const regex = new RegExp(`${elt[0]}\\s`, "g");
-      pre.innerHTML = pre.innerHTML.replaceAll(regex, `<span class='${elt[1]}'>${elt[0]}</span> `);
-      const regex2 = new RegExp(`${elt[0]}:`, "g");
-      pre.innerHTML = pre.innerHTML.replaceAll(regex2, `<span class='${elt[1]}'>${elt[0]}</span>:`);
-      const regex3 = new RegExp(`${elt[0]}\\(`, "g");
-      pre.innerHTML = pre.innerHTML.replaceAll(regex3, `<span class='${elt[1]}'>${elt[0]}</span>(`);
-
-    })
-
-  })
+  return content
 
 }
 
+const getMarkdownHTML = (content) => {
+  let codeBlock = [...content.matchAll(/~~~~(\w+)?\s([\s\S]*?)~~~~/g)]
 
+  codeBlock.forEach((matchedTitle) => {
+    content = content.replace(
+      matchedTitle[0],
+      `<pre class="resultOFTextAreaMarkdown_pre language-${matchedTitle[1]}" ><span class="language">${matchedTitle[1]}</span> <code>${matchedTitle[2]}</code></pre>`,
+    )
+  })
+
+  let preBlocks = [
+    ...content.matchAll(/<pre class="resultOFTextAreaMarkdown_pre.*?">([\s\S]*?)<\/pre>/g),
+  ]
+  preBlocks.forEach((block, index) => {
+    content = content.replace(block[0], `{{PRE_BLOCK_${index}}}`)
+  })
+
+  let html = marked(content)
+
+  let titles1 = [...html.matchAll(/#\s+([^\n]+)/g)]
+  titles1.forEach((matchedTitle) => {
+    html = html.replace(matchedTitle[0], `<h1>${matchedTitle[1]}</h1>`)
+  })
+  let titles2 = [...html.matchAll(/##\s+([^\n]+)/g)]
+  titles2.forEach((matchedTitle) => {
+    html = html.replace(matchedTitle[0], `<h2>${matchedTitle[1]}</h2>`)
+  })
+  let titles3 = [...html.matchAll(/###\s+([^\n]+)/g)]
+  titles3.forEach((matchedTitle) => {
+    html = html.replace(matchedTitle[0], `<h3>${matchedTitle[1]}</h3>`)
+  })
+  preBlocks.forEach((block, index) => {
+    html = html.replace(`{{PRE_BLOCK_${index}}}`, addLanguageColor(block[0]))
+  })
+
+  return html
+}
 
 </script>
   <template>
-        <div :class="'resultOFTextAreaMarkdown' +classname" v-html="text">
+        <div :class="'resultOFTextAreaMarkdown ' +classname" v-html="getMarkdownHTML(text)">
 
         </div>
 

@@ -2,65 +2,80 @@
 import CustomImage from '@/components/CustomImage.vue'
 import useApi from '@/composables/useApi.ts'
 import { ref } from 'vue'
+import type { User } from '@/type/User.ts'
 
 const props = defineProps<{
-  listOfUsersData: []
+  listOfUsersData: User[],
+  ownId : number,
+  userType:string,
   changeRoute: (routePath: string, subpageName: string, idNumber: number | null) => void
 }>()
 /* instanciate */
 
 const { api } = useApi()
-const followingsId = ref([])
-const ownId = ref()
-const listOfUsers = props.listOfUsersData
+const followingsId = ref<number[]>([])
+const listOfUsers  = ref<User[]>( props.listOfUsersData)
 
 const fetchData = async () => {
   try {
     let res = await api('api/profile/followings', null, 'GET')
-    res = await res.json()
-    for (const following of res) {
-      followingsId.value.push(following.id)
+    console.log("res1",res)
+    if (res) {
+      res = await res.json()
+      for (const following of res) {
+        followingsId.value.push(following.id)
+      }
+
     }
-    let res2 = await api('api/profile', null, 'GET')
-    res2 = await res.json()
-    ownId.value(res2.id)
   } catch (err) {
     console.error(err)
   }
 }
-fetchData()
+if (props.userType !== 'followings') {
+  fetchData()
+}else{
+  followingsId.value = listOfUsers.value.map((user)=>(user.id))
+}
 
-const follow = async function (id:number) {
+const follow = async function (id: number) {
   try {
+    console.log("follow ",id)
     let res = await api('api/follow/user/' + id, null, 'PATCH')
+    console.log(res)
 
-    /* for dynamic render */
     followingsId.value.push(id)
-    listOfUsers.forEach((user, index) => { // ✅ Correction de "inedx" → "index"
-      if (user.id == id) {
-        listOfUsers[index].followers_count = user.followers_count + 1
-      }
-    })
+
+    listOfUsers.value = listOfUsers.value.map((user) =>
+      user.id === id ? { ...user, followers_count:  user.followers_count +1  } : user,
+    )
   } catch (err) {
     console.error(err)
   }
 }
 const unfollow = async function (id) {
   try {
+
+    console.log("unfollow ",id)
     const res3 = await api('api/unfollow/user/' + id, null, 'PATCH')
     followingsId.value = followingsId.value.filter((followingId) => followingId !== id)
     listOfUsers.value = listOfUsers.value.map((user) =>
-      user.id === id ? { ...user, followers_count: Math.max(user.followers_count - 1, 0) } : user
+      user.id === id ? { ...user, followers_count: Math.max(user.followers_count - 1, 0) } : user,
     )
-  } catch (err) { console.error(err)
+  } catch (err) {
+    console.error(err)
   }
 }
 </script>
 
 <template>
-  <div class="usersList" v-if="ownId">
-     <div v-for="user of listOfUsers" :key="user.id">
-      <RouterLink v-if="user.id !== ownId" to="" @click="changeRoute('/private/user/' + user.id, 'user', user.id)">
+  <div class="usersList" v-if="props.ownId">
+    <div
+          v-for="user of listOfUsers" :key="user.id"    >
+      <RouterLink
+        v-if="user.id !== props.ownId"
+        to=""
+        @click="changeRoute('/private/user/' + user.id, 'user', user.id)"
+      >
         <div class="name">
           <custom-image :link="user.image"></custom-image>
           <span class="md-text">{{ user.username }}</span>
@@ -83,10 +98,21 @@ const unfollow = async function (id) {
           <span class="md-text">{{ user.responses_count }}</span>
         </div>
       </RouterLink>
-      <button v-if="followingsId.includes(user.id)" class="button2 xsm-text" @click="unfollow(user.id)">Unfollow</button>
+      <button
+        v-if="followingsId.includes(user.id) && user.id !== props.ownId"
+        class="button2 xsm-text"
+        @click="unfollow(user.id)"
+      >
+        Unfollow
+      </button>
 
-      <button  v-if="!followingsId.includes(user.id)" class="button2 xsm-text" @click="follow(user.id)">Follow</button>
-
+      <button
+        v-if="!followingsId.includes(user.id)  && user.id !== props.ownId"
+        class="button2 xsm-text"
+        @click="follow(user.id)"
+      >
+        Follow
+      </button>
     </div>
   </div>
 </template>

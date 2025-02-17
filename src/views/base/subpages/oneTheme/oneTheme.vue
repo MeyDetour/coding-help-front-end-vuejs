@@ -42,7 +42,7 @@ async function getTheme(){
 
     <span>{{theme.name}}</span>
   </div>
-  <list-of-questions :change-route="changeRoute" :listOfQuestions="theme.questions"></list-of-questions>
+  <list-of-questions questionShape="question" :change-route="changeRoute" :listOfQuestions="theme.questions"></list-of-questions>
 
 
 </template>

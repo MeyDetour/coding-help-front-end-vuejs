@@ -4,6 +4,7 @@ import type { Question } from '@/type/Question.ts'
 
 defineProps<{
   listOfQuestions: Question[];
+  questionShape :string;
   changeRoute: (routePath: string, subpageName: string, idNumber: number | null) => void;
 }>();
 
@@ -17,12 +18,14 @@ defineProps<{
       :key="question.id"
       to=""
     >
-      <Row
+      <Row v-if="question.themes"
         :name="question.title"
-        type="question"
+        :type="questionShape"
         :number1="question.contributor_count"
         :number2="question.responses_count"
         :isQuestionValidate="question.isValidate"
+        :themes="question.themes"
+        :changeRoute = "changeRoute"
       ></Row>
     </RouterLink>
   </div>
