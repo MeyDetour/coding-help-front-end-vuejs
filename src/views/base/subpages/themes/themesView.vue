@@ -25,8 +25,8 @@ async function getThemes(){
   <custom-title backgroundWord="Top" main-word="Themes"></custom-title>
   <div>
     <RouterLink @click="props.changeRoute('/private/theme/'+theme.id,'theme',theme.id)" to=""   v-for="theme in themes" :key="theme.id">
-        <row :name="theme.name" type="themes" :number1="theme.contributor_count"
-             :number2="theme.questions_count"></row>
+        <row :isQuestionValidate="false" :name="theme.name" type="themes" :number1="theme.contributor_count" :themes="[]"
+             :number2="theme.questions_count" :change-route="changeRoute"></row>
     </RouterLink>
   </div>
 </template>

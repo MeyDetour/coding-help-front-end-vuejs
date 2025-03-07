@@ -24,7 +24,6 @@ async function getTheme(){
   const response = await api('api/theme/'+props.id, null, 'GET')
 
   theme.value = await response.json() as Theme
-  console.log(theme.value)
 }
 
 </script>

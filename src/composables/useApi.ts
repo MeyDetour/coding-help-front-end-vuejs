@@ -1,4 +1,5 @@
 import { useRouter } from 'vue-router'
+import { toast } from 'vue3-toastify'
 
 
 export default function useApi() {
@@ -19,6 +20,7 @@ export default function useApi() {
       })
 
       if (response.status === 401) {
+        toast.error("Error while authentification, please login")
         router.push('/login')
       }
       if (!response.ok) {
@@ -31,6 +33,8 @@ export default function useApi() {
       return   response
 
     } catch (error) {
+      toast.error("Oups, there is an error : "+ error);
+
       console.error('Login error:', error);
       return Promise.reject(error);
     }

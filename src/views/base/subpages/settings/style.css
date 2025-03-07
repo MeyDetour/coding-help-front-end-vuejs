@@ -1,17 +1,55 @@
 
-.loginPage{
-    width: 30%;
-    height: 100%;
-    align-items: center;
+.section1{
+    display: flex;
+    flex-direction: column;
 }
-.loginPage h1{
-    margin: 0;
-}
-.loginPage p{
-    color: var(--grey);
-}
-.loginPage a{
 
-    text-decoration: none;
-    color: var(--grey);
+.section1 ul{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 42px;
+    padding: 0;
+}
+
+.section1 ul li{
+    display: flex;
+    flex-direction: row;
+    align-items: flex-end;
+    gap: 8px;
+    cursor: pointer;
+
+}
+.section1 ul li span:first-child{
+    color: #787575;
+}.section1 ul li span:last-child{
+     color: white;
+ }
+.section1 .focus{
+    font-weight: bold;
+    color: white !important;
+}
+
+.section1 .settingsSubSection{
+    display: flex;
+    color: white;
+    flex-direction: column;
+    gap: 10px;
+    align-items: start;
+    margin-bottom: 50px;
+}
+
+.section1 .settingsSubSection > *:not(span:first-child){
+   margin-left: 20px;
+}
+
+.section1 .settingsSubSection > span:first-child{
+    font-weight: bold;
+}
+
+
+.section1 .settingsSubSection .row{
+    display: flex;
+    flex-direction:row;
+    gap: 10px;
 }

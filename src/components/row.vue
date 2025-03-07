@@ -33,10 +33,12 @@ const props = defineProps<{
         <img v-if="type == 'question'" src="../assets/icon/clue.svg" alt="question responses" />
         <span>{{ props.number2 }}</span>
       </div>
+      <template v-if="type == 'question'">
+        <img v-if="isQuestionValidate" src="../assets/icon/good.svg" alt="icon true" />
+        <img v-if="!isQuestionValidate" src="../assets/icon/bad.svg" alt="icon false" />
 
-      <img v-if="isQuestionValidate" src="../assets/icon/good.svg" alt="icon true" />
-      <img v-if="!isQuestionValidate" src="../assets/icon/bad.svg" alt="icon false" />
-    </div>
+      </template>
+       </div>
   </div>
 </template>
 

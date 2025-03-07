@@ -34,13 +34,13 @@
 
 /* ====================== sections  ====================== */
 
-.profileSectionDetails{
+.profileSection2{
     display: flex;
     flex-direction: column;
     gap: 50px;
 }
 
-.profileSectionDetails ul{
+.profileSection2 ul{
     display: flex;
     flex-direction: row;
     align-items: center;
@@ -48,7 +48,7 @@
     padding: 0;
 }
 
-.profileSectionDetails ul li{
+.profileSection2 ul li{
     display: flex;
     flex-direction: row;
     align-items: flex-end;
@@ -56,12 +56,12 @@
     cursor: pointer;
 
 }
-.profileSectionDetails ul li span:first-child{
+.profileSection2 ul li span:first-child{
     color: #787575;
-}.profileSectionDetails ul li span:last-child{
+}.profileSection2 ul li span:last-child{
      color: white;
  }
-.profileSectionDetails .focus{
+.profileSection2 .focus{
     font-weight: bold;
     color: white !important;
 }

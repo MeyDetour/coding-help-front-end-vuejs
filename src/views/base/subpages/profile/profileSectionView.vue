@@ -11,6 +11,7 @@ import type { User } from '@/type/User.ts'
 
 const props = defineProps<{
   profile : User,
+  type : string, // "ownUser" for own user or  "otherUser"
   changeRoute: (routePath: string, subpageName: string, idNumber: number | null) => void
 }>()
 const { api } = useApi()
@@ -22,7 +23,12 @@ const changeSubpage = async function (subpage: string) {
   try {
     console.log("charge data for ",subpage)
     data.value = []
-    const res = await api('api/profile/' + subpage, null, 'GET')
+    let res;
+    if (props.type=="otherUser") {
+       res = await api('api/user/'+props.profile.id+'/' + subpage, null, 'GET')
+    } else{
+       res = await api('api/profile/' + subpage, null, 'GET')
+    }
     data.value = await res.json()
 
     subpageOfProfile.value = subpage
@@ -36,7 +42,7 @@ changeSubpage(subpageOfProfile.value)
 </script>
 
 <template>
-  <div class="section2"  >
+  <div class="profileSectionDetails"  >
     <ul>
       <li @click="changeSubpage('questions')">
         <span :class="`md-text  ${subpageOfProfile === 'questions' ? 'focus' : ' '}`">Questions</span>
