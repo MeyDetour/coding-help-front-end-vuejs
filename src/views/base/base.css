@@ -95,22 +95,24 @@ nav span:last-child {
 }
 
 nav .closeSVG{
-    display: none;
+    display: none; position: absolute;
+    height: 25px;
+    width: 25px;
+    left: 31px;
+    top: 38px;
 }
 @media only screen and (max-width: 700px) {
     nav {
         width: 100vw;
+
+        padding: 79px 31px;
     }
 
     nav ul li {
         text-align: center;
     }
     nav .closeSVG{        display: flex;
-        position: absolute;
-        height: 25px;
-        width: 25px;
-        left: 31px;
-        top: 38px;
+
     }
 }
 
@@ -127,10 +129,27 @@ nav .closeSVG{
     padding: 68px 58px;
     box-sizing: border-box;
 }
+.openOverlayIcon{
+    display: none;
+    position: absolute;
+    height: 30px;
+    width: 30px;
+    left: 31px;
+    top: 20px;
+}
 
 @media only screen and (max-width: 700px) {
-    .content {
+    .content{
+        width: 100vw;
+        padding: 52px 26px;
+
+    }
+    .contentClosed {
         width: 0;
         padding: 0;
+    }
+    .openOverlayIcon{
+        display: flex;
+        z-index: 10;
     }
 }

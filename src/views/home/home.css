@@ -1,6 +1,3 @@
-
-
-
 /*==========TITLE================*/
 
 .titleSpan1 {
@@ -20,8 +17,14 @@
     font-weight: bold;
 }
 
-.fs-60{
+.fs-60 {
     font-size: 60px;
+}
+@media only screen and (max-width: 700px) {
+    .titleSpan1, .titleSpan2 {
+        font-weight: bold;
+        font-size: 25px;
+    }
 }
 /*===============HEADER=============*/
 .homePage {
@@ -79,6 +82,7 @@
 
 .homePage .descriptionContainer .oneTechno p {
     color: var(--grey);
+    margin: 0;
 
 }
 
@@ -91,9 +95,12 @@
     justify-content: center;
     align-items: center;
     padding: 10px;
-    min-width: 40px;
-    min-height: 40px;
+    width: 40px;
+    height: 40px;
 }
+
+.homePage .descriptionContainer .oneTechno .logoBackground img
+{width: 100%;height: 100%;object-fit: contain;}
 .homePage .descriptionContainer .oneTechno span {
 
     -webkit-text-fill-color: transparent;
@@ -106,10 +113,47 @@
     -webkit-background-clip: text;
 }
 
-.homePage .descriptionContainer #djangoSection > span { background: -webkit-linear-gradient(180deg, #2BA977, #278E65);
+.homePage .descriptionContainer #djangoSection > span {
+    background: -webkit-linear-gradient(180deg, #2BA977, #278E65);
     -webkit-background-clip: text;
 }
 
-.homePage .descriptionContainer #postgresqlSection > span { background: -webkit-linear-gradient(-91deg, #258ADB, #9DBDD6);
+.homePage .descriptionContainer #postgresqlSection > span {
+    background: -webkit-linear-gradient(-91deg, #258ADB, #9DBDD6);
     -webkit-background-clip: text;
+}
+
+
+@media only screen and (max-width: 700px) {
+    .homePage > p {
+        width: 95%;
+        font-size: 29px;
+        margin-block: 15vh;
+    }
+
+.homePage .descriptionContainer {
+    width: 95%;
+}
+    .fs-60 {
+        font-size: 40px;
+    }
+
+    .homePage .greyText {
+        font-size: 20px;
+    }
+
+
+    .homePage .descriptionContainer {
+        flex-direction: column;
+        gap: 50px;
+    }
+
+    .homePage .descriptionContainer .oneTechno {
+        width: 100%;
+    }
+
+.homePage .descriptionContainer .oneTechno .logoBackground {
+    height: 30px;
+    width: 30px;
+}
 }

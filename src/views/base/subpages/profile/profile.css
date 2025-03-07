@@ -1,20 +1,22 @@
-.profilePage{
+.profilePage {
 
 }
-.profilePage .section1{
+
+.profilePage .section1 {
     display: flex;
     flex-direction: row;
-    align-items: flex-start;
+    align-items: flex-end;
     gap: 37px;
     margin-bottom: 50px;
 }
-.profilePage .section1 img{
+
+.profilePage .section1 img {
     width: 12%;
     object-fit: contain;
     border-radius: 50%;
 }
 
-.profilePage .section1 >div{
+.profilePage .section1 > div {
     display: flex;
     flex-direction: column;
     justify-content: start;
@@ -22,25 +24,25 @@
 
 }
 
-.profilePage .section1 >div span{
+.profilePage .section1 > div span {
     color: var(--grey);
 }
 
 
-.profilePage .section1 >div span:first-child{
+.profilePage .section1 > div span:first-child {
     color: white;
 }
 
 
 /* ====================== sections  ====================== */
 
-.profileSectionDetails{
+.profileSectionDetails {
     display: flex;
     flex-direction: column;
     gap: 50px;
 }
 
-.profileSectionDetails ul{
+.profileSectionDetails ul {
     display: flex;
     flex-direction: row;
     align-items: center;
@@ -48,7 +50,7 @@
     padding: 0;
 }
 
-.profileSectionDetails ul li{
+.profileSectionDetails ul li {
     display: flex;
     flex-direction: row;
     align-items: flex-end;
@@ -56,12 +58,34 @@
     cursor: pointer;
 
 }
-.profileSectionDetails ul li span:first-child{
+
+.profileSectionDetails ul li span:first-child {
     color: #787575;
-}.profileSectionDetails ul li span:last-child{
-     color: white;
- }
-.profileSectionDetails .focus{
+}
+
+.profileSectionDetails ul li span:last-child {
+    color: white;
+}
+
+.profileSectionDetails .focus {
     font-weight: bold;
     color: white !important;
+}
+
+@media only screen and (max-width: 700px) {
+    .profilePage .section1 {
+        gap: 22px;
+    }
+
+    .profilePage .section1 img {
+        width: 20%;
+    }
+
+    .profileSectionDetails ul {
+        width: 100%;
+        flex-direction: column;
+        align-items: start;
+        gap: 19px;
+    }
+
 }

@@ -1,46 +1,4 @@
 /* ====================== GET QUESTION ====================== */
-.newQuestionPage {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    padding: 0;
-    overflow-y: hidden;
-}
-
-.newQuestionPage .left, .newQuestionPage .right {
-    width: 65%;
-    overflow-y: auto;
-}
-
-.newQuestionPage .left{
-    box-sizing: border-box;
-    padding: 68px 58px;
-}
-.newQuestionPage .right {
-    height: 100%;
-
-    overflow-x: hidden;
-    width: 35%;
-    background: var(--black-second-background);
-}
-.newQuestionPage .right h3{
-    background: var(--black-third-background);
-    width: 100%;
-    padding: 28px 20px;
-    box-sizing: border-box;
-    margin: 0;
-    color: white;
-    text-wrap: wrap;
-}
-
-.newQuestionPage .right div{
-    color: white;
-    padding: 28px 20px;
-
-    width: 100%;
-    box-sizing: border-box;
-}
-/* ====================== GET QUESTION ====================== */
 .questionPage {
     padding: 0 !important;
 }
@@ -53,6 +11,13 @@
     padding: 26px 56px;
     box-sizing: border-box;
     background: var(--black-third-background);
+}
+
+@media only screen and (max-width: 700px) {
+    .questionPage .titleHeader {
+    }
+
+
 }
 
 /* ---------------- textes ---------------*/
@@ -93,6 +58,15 @@
     height: 100%;
 }
 
+@media only screen and (max-width: 700px) {
+    .questionPage .titleHeader > div {
+        width: fit-content;
+    }
+
+    .questionPage .titleHeader {
+        padding: 26px 15px 26px 76px;
+    }
+}
 
 /* ====================== content  ====================== */
 .questionPage .row {
@@ -117,41 +91,44 @@
     align-items: center;
     padding: 68px 58px;
 }
+
 .questionPage .questionContent .resultOFTextAreaMarkdown,
 .questionPage .questionContent .oneResponse,
-.questionPage .questionContent .hr
-{
+.questionPage .questionContent .hr {
     width: 50%;
 }
+
 .questionPage .left-open {
     /*padding: 68px 58px;*/
     box-sizing: border-box;
     width: 50%;
 }
+
 .questionPage .left-open .questionContent .resultOFTextAreaMarkdown,
 .questionPage .left-open .questionContent .oneResponse,
-.questionPage .left-open .questionContent .hr
-{
+.questionPage .left-open .questionContent .hr {
     width: 100%;
 }
-.questionPage .widgetQuestionSettings{
 
-     display: flex;
-     flex-direction: column;
-     background: #000000eb;
-     border: 0.5px solid black;
-     color: white;
-     padding: 30px;
-     box-sizing: border-box;
-     border-radius: 20px;
-     position: absolute;
-     left: 50%;
-     top: 215%;
-     transform: translate(-50%, 0);
+.questionPage .widgetQuestionSettings {
+
+    display: flex;
+    flex-direction: column;
+    background: #000000eb;
+    border: 0.5px solid black;
+    color: white;
+    padding: 30px;
+    box-sizing: border-box;
+    border-radius: 20px;
+    position: absolute;
+    left: 50%;
+    top: 215%;
+    transform: translate(-50%, 0);
     z-index: 2;
- }
-.questionPage .widgetQuestionSettings > a:hover ,.questionPage .widgetQuestionSettings > span:hover {
-    color: white!important;
+}
+
+.questionPage .widgetQuestionSettings > a:hover, .questionPage .widgetQuestionSettings > span:hover {
+    color: white !important;
 }
 
 /* ====================== author   ====================== */
@@ -175,3 +152,9 @@
 }
 
 
+@media only screen and (max-width: 700px) {
+
+
+.questionPage .questionContent {
+    padding: 37px 13px;}
+}

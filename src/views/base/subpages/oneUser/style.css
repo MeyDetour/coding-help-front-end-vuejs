@@ -1,35 +1,3 @@
-.profilePage{
-
-}
-.profilePage .section1{
-    display: flex;
-    flex-direction: row;
-    align-items: flex-start;
-    gap: 37px;
-    margin-bottom: 50px;
-}
-.profilePage .section1 img{
-    width: 12%;
-    object-fit: contain;
-    border-radius: 50%;
-}
-
-.profilePage .section1 >div{
-    display: flex;
-    flex-direction: column;
-    justify-content: start;
-    padding-top: 30px;
-
-}
-
-.profilePage .section1 >div span{
-    color: var(--grey);
-}
-
-
-.profilePage .section1 >div span:first-child{
-    color: white;
-}
 
 
 /* ====================== sections  ====================== */
@@ -64,4 +32,9 @@
 .profileSection2 .focus{
     font-weight: bold;
     color: white !important;
+}
+
+
+@media only screen and (max-width: 700px) {
+
 }

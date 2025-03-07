@@ -20,10 +20,10 @@ body {
     font-size: 18px;
     font-weight: 400;
     width: 100vw;
-    min-height: 100vh;
-;
+    min-height: 100vh;;
 }
-#app{
+
+#app {
     width: 100vw;
     min-height: 100vh;
     display: flex;
@@ -31,6 +31,7 @@ body {
     justify-content: center;
     align-items: center
 }
+
 ::selection {
     background: var(--blue);
     color: black;
@@ -42,6 +43,7 @@ body {
     color: #EEE;
     text-shadow: none;
 }
+
 /* width */
 ::-webkit-scrollbar {
     width: 10px;
@@ -61,6 +63,12 @@ body {
 ::-webkit-scrollbar-thumb:hover {
     background: #232325;
 }
+
+ @media only screen and (max-width: 700px) {
+     body{
+         font-size: 16px;
+     }
+ }
 /*==========FONT================*/
 .lg-text {
     font-weight: 500;
@@ -108,11 +116,23 @@ a {
     height: 0.5px;
     margin-block: 20px;
 }
-.d-none{
+
+.d-none {
     display: none !important;
 }
-.d-flex{
+
+.d-flex {
     display: flex;
+}
+@media only screen and (max-width: 700px) {
+    .lg-bold-text {
+        font-size: 20px;
+    }
+    .md-text {
+        font-size: 15px;
+    }.lg-text {
+         font-size: 15px;
+     }
 }
 /*=============COMPONENT==============*/
 
@@ -129,7 +149,8 @@ a {
     border: 1px solid white;
     color: white;
 }
-.button0,.button1{
+
+.button0, .button1 {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -145,7 +166,7 @@ a {
 }
 
 
-.button2{
+.button2 {
     cursor: pointer;
     background: transparent;
     padding: 5px 10px;
@@ -184,6 +205,15 @@ a {
     color: white;
 }
 
+@media only screen and (max-width: 700px) {
+    .customTitle h1 {
+        font-size: 94px;
+    }
+
+    .customTitle h2 {
+        font-size: 22px;
+    }
+}
 
 /* forms */
 
@@ -218,20 +248,22 @@ a {
     font-size: 16px;
 }
 
-.basicForm textarea{
+.basicForm textarea {
     padding-top: 80px;
     width: 100%;
 }
+
 .basicForm fieldset {
     border: 1px solid var(--grey2);
     border-radius: 6px;
 }
 
 
-.basicForm span,.basicForm label {
+.basicForm span, .basicForm label {
     color: white;
 }
-.basicForm label{
+
+.basicForm label {
     display: flex;
     flex-direction: column;
     gap: 25px;
@@ -243,7 +275,7 @@ a {
     border: 1px solid var(--blue);
 }
 
-.basicForm input::placeholder ,.basicForm textarea::placeholder {
+.basicForm input::placeholder, .basicForm textarea::placeholder {
     color: var(--grey);
     font-size: 18px;
 }
@@ -271,7 +303,8 @@ a {
     justify-content: space-between;
     background-color: var(--black-second-background);
 }
-.rowForList .badge{
+
+.rowForList .badge {
     color: var(--grey);
     background: #3a3a3a;
     padding: 5px;
@@ -280,6 +313,11 @@ a {
     margin-inline: 5px;
     cursor: pointer;
 }
+.rowForList span{
+
+    line-height: 34px;
+}
+
 .rowForList .icons {
     display: flex;
     flex-direction: row;
@@ -318,7 +356,8 @@ a {
     align-items: flex-end;
     gap: 50px
 }
-.usersList > div>a {
+
+.usersList > div > a {
     width: 90%;
     display: flex;
     flex-direction: row;
@@ -333,7 +372,8 @@ a {
     gap: 20px;
     width: 29%;
 }
-.usersList .name img{
+
+.usersList .name img {
     width: 35px;
     border-radius: 50%;
     object-fit: cover;
@@ -343,7 +383,7 @@ a {
     color: #787575;
 }
 
-.usersList .counters{
+.usersList .counters {
 
     display: flex;
     flex-direction: row;
@@ -353,12 +393,21 @@ a {
 }
 
 
-.usersList .counters span:first-child{
+.usersList .counters span:first-child {
     color: #787575;
 }
 
+@media only screen and (max-width: 700px) {
+
+    .usersList .createdAt{
+        display: none;
+    }
+
+    .usersList .counters{
+        display: none;}
+}
 /* security widget */
-#securityWidgetContainer{
+#securityWidgetContainer {
     position: absolute;
     left: 0;
     top: 0;
@@ -386,7 +435,7 @@ a {
     gap: 50px;
 }
 
-#securityWidgetContainer .securityWidget div{
+#securityWidgetContainer .securityWidget div {
     display: flex;
     flex-direction: row;
     gap: 50px;

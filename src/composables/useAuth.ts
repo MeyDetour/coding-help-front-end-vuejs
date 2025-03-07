@@ -16,9 +16,19 @@ export default function useAuth() {
       await router.push('/private/dashboard')
     }
   }
+
+  async function register(userData: { email: string; password: string , username : string }) {
+    console.log("let's register ")
+    let response = await api('register', userData, 'POST')
+    response = await response.json()
+    if (response) {
+      localStorage.setItem('token', response.access)
+      await router.push('/private/dashboard')
+    }
+  }
   async function logout() {
    localStorage.removeItem("token")
   }
 
-  return { login,logout }
+  return { login,logout,register }
 }

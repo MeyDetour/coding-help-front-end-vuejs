@@ -1,13 +1,14 @@
 <script setup lang="ts">
 import { reactive, ref } from 'vue'
-import './login.css'
+import './register.css'
 import useAuth from '@/composables/useAuth.ts'
 
-const { login } = useAuth()
+const { register } = useAuth()
 const error = ref('')
 const state = reactive({
   email: 'mey@meydeeetour.com',
   password: 'meymey',
+  username: 'username',
 })
 
 function validEmail(email: string): boolean {
@@ -25,7 +26,7 @@ function onSubmit() {
     return
   }
   console.log(state)
-  login(state)
+  register(state)
 }
 </script>
 <template>
@@ -38,6 +39,9 @@ function onSubmit() {
     <p class="md-text">Welcome to coding help - let’s log in your account !</p>
     <span v-if="error" class="error md-text">{{ error }}</span>
     <label>
+      <input placeholder="Your username" v-model="state.username" name="username" />
+    </label>
+    <label>
       <input placeholder="Your email" v-model="state.email" name="email" />
     </label>
 
@@ -46,6 +50,6 @@ function onSubmit() {
     </label>
 
     <button type="submit" class="button1" value="Submit">Login</button>
-    <RouterLink to="/register" class="xsm-text">You don't have account ? Register</RouterLink>
+    <RouterLink to="/login" class="xsm-text">You already have account ? Login</RouterLink>
   </form>
 </template>

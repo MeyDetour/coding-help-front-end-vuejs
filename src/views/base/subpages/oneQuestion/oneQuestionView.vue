@@ -46,7 +46,7 @@ if (props.id) {
 }
 
 // To add new question
-
+const isMobile = ref(window.innerWidth <= 700)
 const deleteQuestion = function () {
   if (!props.id) {
     return
@@ -98,7 +98,7 @@ async function getQuestion() {
 
 
     <!--     QUESTION      -->
-    <div :class="`left ${addResponse ? 'left-open' : ' '}`">
+    <div v-if="!isMobile || (isMobile && addResponse)" :class="`left ${addResponse ? 'left-open' : ' '}`">
       <!--   Author   -->
       <div class="authorSection">
         <custom-image :link="question.author.image"></custom-image>

@@ -36,6 +36,9 @@ const newTheme = reactive({
   name: '',
 })
 const themes = ref<Theme[]>([])
+let displayOwerview = ref(false)
+let isMobile = ref(window.innerWidth < 700)
+
 
 
 getThemes()
@@ -136,7 +139,8 @@ const onSubmit = async () => {
 </script>
 
 <template>
-  <div v-if="themes.length > 0" class="left">
+  <div v-if="themes.length > 0 && (!isMobile ||  (isMobile && !displayOwerview) )" class="left">
+    <img class="overviewIcon" @click="()=>displayOwerview=true" src="../../../../assets/icon/eye.svg" alt="">
     <form @submit.prevent="onSubmit" class="basicForm">
       <span v-if="error" class="error">{{ error }}</span>
 
@@ -174,8 +178,12 @@ const onSubmit = async () => {
       <button type="submit" class="button1" value="Submit">Create</button>
     </form>
   </div>
-  <div class="right" v-if="(newQuestion.content || (newQuestion.title !== ''  ) && themes.length > 0)">
+<!--  if question has content and title and themes request is sucess -->
+<!--   for mobile : if left is close -->
+  <div class="right" v-if="(newQuestion.content || (newQuestion.title !== ''  ))&& themes.length > 0 && (!isMobile ||  (isMobile && displayOwerview) )">
+
     <h3 v-if="newQuestion.title !== ''">{{newQuestion.title}}</h3>
+    <img class="closeOverviewIcon" @click="()=>displayOwerview=false" src="../../../../assets/icon/form.svg" alt="">
 
     <result-of-text-area-markdown
       v-if="newQuestion.content"
