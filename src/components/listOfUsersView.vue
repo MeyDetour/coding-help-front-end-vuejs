@@ -18,11 +18,10 @@ const listOfUsers  = ref<User[]>( props.listOfUsersData)
 
 const fetchData = async () => {
   try {
-    let res = await api('api/profile/followings', null, 'GET')
-    console.log("res1",res)
-    if (res) {
-      res = await res.json()
-      for (const following of res) {
+    const res = await api('api/profile/followings', null, 'GET')
+   const resFollwings = await res.json() as User[]
+    if (resFollwings) {
+      for (const following of resFollwings) {
         followingsId.value.push(following.id)
       }
 
@@ -52,7 +51,7 @@ const follow = async function (id: number) {
     console.error(err)
   }
 }
-const unfollow = async function (id) {
+const unfollow = async function (id:number) {
   try {
 
     console.log("unfollow ",id)

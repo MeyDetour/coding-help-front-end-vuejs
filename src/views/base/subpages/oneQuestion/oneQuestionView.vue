@@ -20,7 +20,7 @@ const props = defineProps<{
 }>()
 
 //  GET PROFILE
-const ownId = ref<User>()
+const ownId = ref<number | null>()
 const getProfile = async () => {
   try {
     const res = await api('api/profile', null, 'GET')
@@ -94,7 +94,7 @@ function changeAddResponse() {
       <!--   TO EDIT AND DELETE QUESTION IF YOUR OWNER    -->
       <div
         style="position: relative; align-items: center; cursor: pointer"
-        v-if="ownId == question.author.id"
+        v-if="question.author && ownId === question.author.id"
       >
         <img
           @click="
@@ -128,6 +128,7 @@ function changeAddResponse() {
       <div class="questionContent">
         <!--    QUESTION CONTENT    -->
         <result-of-text-area-markdown
+          v-if="question?.contentHTML"
           classname=""
           :text="question.contentHTML"
         ></result-of-text-area-markdown>
@@ -140,7 +141,7 @@ function changeAddResponse() {
           <details class="oneResponse">
             <summary>
               <div>
-                <CustomImage :link="response.author_data.image"></CustomImage>
+                <CustomImage :link="response.author_data.image?response.author_data.image:''"></CustomImage>
                 <span>{{ response.author_data.username }}</span>
               </div>
 
@@ -174,15 +175,13 @@ function changeAddResponse() {
                     class="widgetQuestionSettings"
                   >
                     <span
-                      @click="
-                        security.showWidget(
+                      @click=" showWidget(
                           'Do you really want to delete you question ?',
                           '/private/question/' + question.id,
                           'api/response/' + response.id,
                           'DELETE',
                           null,
-                        )
-                      "
+                        )  "
                       >Delete</span
                     >
                   </div>

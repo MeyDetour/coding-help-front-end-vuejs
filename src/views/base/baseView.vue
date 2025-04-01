@@ -18,9 +18,9 @@ import OneUserView from '@/views/base/subpages/oneUser/oneUserView.vue'
 const { logout } = useAuth()
 const route = useRoute()
 const router = useRouter()
-let subpage = ref<string>(route.params.subpage)
-let id = ref<number>(parseInt(route.params.catchAll))
-const security = useSecurity()
+let subpage = ref<string>(Array.isArray( route.params.subpage) ?  route.params.subpage[0] : route.params.subpage)
+let id = ref<number>(parseInt(Array.isArray(route.params.catchAll) ? route.params.catchAll[0] : route.params.catchAll))
+const {message,requestedLinkAction,requestedBody,requestedMethode,originLink,isVisible} = useSecurity()
 let overlayOpen = ref(false)
 let isMobile = ref(window.innerWidth < 700)
 console.log('Subpage:', subpage.value)
@@ -46,7 +46,7 @@ function changeRoute(routePath: string, subpageName: string, idNumber: number | 
   }
 }
 
-function changeOverlay(value:boolean){
+function changeOverlay(value: boolean) {
   overlayOpen.value = value
   console.log(overlayOpen.value)
 }
@@ -54,17 +54,22 @@ function changeOverlay(value:boolean){
 
 <template>
   <security-widget-view
-    v-if="security.isVisible"
-    :link="security.requestedLinkAction"
-    :originLink="security.originLink"
-    :body="security.requestedBody"
-    :methode="security.requestedMethode"
-    :message="security.message"
+    v-if="isVisible && message && requestedMethode && requestedBody && originLink && requestedLinkAction"
+    :link="requestedLinkAction"
+    :originLink="originLink"
+    :body="requestedBody"
+    :methode="requestedMethode"
+    :message="message"
   />
 
   <div class="privatePage">
     <nav v-if="!isMobile || (isMobile && overlayOpen)" class="">
-      <img @click="()=>changeOverlay(false)" class="closeSVG" src="../../assets/icon/close.svg" alt="" />
+      <img
+        @click="() => changeOverlay(false)"
+        class="closeSVG"
+        src="../../assets/icon/close.svg"
+        alt=""
+      />
       <div>
         <img src="../../assets/logo.svg" style="width: 56px" />
         <span class="titleSpan1">Coding</span>
@@ -123,7 +128,13 @@ function changeOverlay(value:boolean){
       <span @click="logout">Deconnexion</span>
     </nav>
     <div :class="computedClass" v-if="!overlayOpen">
-      <img class="openOverlayIcon" @click="()=>changeOverlay(true)" src="../../assets/icon/menu.svg" v-if="isMobile" alt="">
+      <img
+        class="openOverlayIcon"
+        @click="() => changeOverlay(true)"
+        src="../../assets/icon/menu.svg"
+        v-if="isMobile"
+        alt=""
+      />
       <dashboard-view v-if="subpage == 'dashboard'" :changeRoute="changeRoute"></dashboard-view>
       <themes-view :changeRoute="changeRoute" v-if="subpage == 'themes'"></themes-view>
       <one-theme :changeRoute="changeRoute" v-if="subpage == 'theme'" :id="id"></one-theme>

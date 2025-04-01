@@ -12,11 +12,18 @@ import type { Question } from '@/type/Question.ts'
 
 const { api } = useApi()
 const router = useRouter()
+
+
+let displayOwerview = ref(false)
+let isMobile = ref(window.innerWidth < 700)
+
+const newTheme = reactive({ name: ''})
+const themes = ref<Theme[]>([])
 const error = ref<null | string>(null)
-const redirectionLink = ref<null | string>(null)
 const newQuestion = reactive({
   title: 'How do I work?',
   contentHTML: '',
+  themes: [],
   content: `# Welcome to CodingHelp!
 Here is an example of the Markdown you can write in your question:
 
@@ -32,16 +39,7 @@ def split_lines(s):
 
 ~~~~
   `,
-  themes: [],
 })
-const newTheme = reactive({
-  name: '',
-})
-const themes = ref<Theme[]>([])
-let displayOwerview = ref(false)
-let isMobile = ref(window.innerWidth < 700)
-
-getThemes()
 
 async function getThemes() {
   const response = await api('api/themes', null, 'GET')
@@ -52,32 +50,35 @@ async function getThemes() {
     console.log(themes.value)
   }
 }
+getThemes()
 
-const addBackslashN = function (content) {
+
+const addBackslashN = function (content :string) {
   return content
     .replace(/\r?\n/g, '\\n') // Ajoute \n pour chaque saut de ligne
     .replace(/\\n\\n/g, '\\n\\n') // Préserve les doubles sauts de ligne
 }
 
 const onSubmit = async () => {
-  console.log(newQuestion)
-  console.log(newTheme)
-  let finalData = {
+
+  // initialise data to send
+  const finalData : {title:string,contentHTML:string,content:string,themes:number[]} = {
     title: newQuestion.title,
     contentHTML: '',
     content: '',
     themes: [],
   }
-  let newThemeName = newTheme.name.replace(/\s+/g, '')
+
+  // get theme added inexistant
+  const newThemeName = newTheme.name.replace(/\s+/g, '')
 
   /* if no theme provided */
-
   if (!newThemeName && newQuestion.themes.length == 0) {
     error.value = 'You must associate to the theme'
     return
   }
 
-  /* get theme id as int not string*/
+  /* add themes ids to final data*/
   if (newQuestion.themes.length > 0) {
     const themesToAdd = <number[]>[]
     for (const themeId of newQuestion.themes) {
@@ -89,27 +90,32 @@ const onSubmit = async () => {
   /* TO CREATE ONE THEME - IF NEEDED*/
   if (newThemeName !== '') {
     try {
-      let res = await api('api/theme/new', { name: newThemeName }, 'POST')
+      const res = await api('api/theme/new', { name: newThemeName }, 'POST')
       if (res) {
-        res = await res.json()
-        finalData.themes.push(res.id)
+        const theme = await res.json() as Theme
+        /* if theme is created add it to themes list */
+        finalData.themes.push(theme.id)
       }
     } catch (err) {
       error.value = 'Error while creating theme : ' + err
     }
   }
 
-  /* if theme is found add it to themes list */
 
-  //replace all br as \n
-  let html = document.querySelector('.resultOFTextAreaMarkdown')?.innerHTML || ''
-  let markdown = document.querySelector('.contentTextAreaMarkdown textarea')?.value || ''
+  // format content : replace all br as \n
+  const html :string = document.querySelector('.resultOFTextAreaMarkdown')?.innerHTML || ''
+  let markdown : string = newQuestion.content
+  if (!markdown) {
+    console.log("no markdown")
+    console.log(html)
+    console.log(markdown)
+    return
+  }
   markdown = addBackslashN(markdown)
-
   finalData.content = markdown
   finalData.contentHTML = html
 
-  console.log(finalData)
+
 
   try {
     const res = await api('api/question/new', finalData, 'POST')
@@ -117,12 +123,10 @@ const onSubmit = async () => {
     if (res) {
       const question = (await res.json()) as Question
       console.log(question)
-      console.log(question.id)
       await router.push('/private/question/' + question.id)
     }
   } catch (err) {
     if (err instanceof Error) {
-      // Vérifie si l'erreur est un objet de type `Response` (provenant du fetch)
       if ('status' in err && err.status === 409) {
         error.value = 'A question with similar content already exists.'
       } else {
@@ -132,8 +136,7 @@ const onSubmit = async () => {
       error.value = 'Error while creating question: Unexpected error occurred'
     }
   }
-  console.log('===========================================================')
-}
+  }
 </script>
 
 <template>
@@ -163,7 +166,7 @@ const onSubmit = async () => {
         <div v-for="theme of themes" :key="theme.id" class="oneChoice">
           <input
             type="checkbox"
-            :id="theme.id"
+            :id="theme.id.toString()"
             name="themes"
             :value="theme.id"
             v-model="newQuestion.themes"

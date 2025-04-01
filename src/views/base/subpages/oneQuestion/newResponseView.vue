@@ -6,17 +6,18 @@ import { useRouter } from 'vue-router'
 import ContentTextAreaMarkdown from '@/components/markdown/contentTextAreaMarkdown.vue'
 import ResultOfTextAreaMarkdown from '@/components/markdown/resultOfTextAreaMarkdown.vue'
 import type { Question } from '@/type/Question.ts'
+import type { ApiResponse } from '@/type/ApiResponse.ts'
 
 const { api } = useApi()
 const router = useRouter()
 const props = defineProps<{
   classname: string
   id: number
-  changeAddResponse:()=>void
+  changeAddResponse: () => void
 }>()
 
 const error = ref()
-const response = reactive({
+const response: ApiResponse = reactive({
   content: `
 ## Please respond to this question with precision.
 
@@ -28,11 +29,19 @@ To provide a thorough answer, make sure to address all aspects of the question c
 
 Thank you for your detailed response!
 `,
-  question: 0,
+  question: props.id,
+  author: 0,
+  author_data: { username: '' ,image:null},
+
+  contentHTML: '',
+  created_at: '',
+  downvote_count: 0,
+  id: 0,
+  upvote_count: 0,
 })
 
 const toggleWidget = function () {
-  const widget = document.querySelector('.questionPage .widgetQuestionSettings')
+  const widget: HTMLElement | null = document.querySelector('.questionPage .widgetQuestionSettings')
   if (!widget) {
     return
   }

@@ -55,8 +55,8 @@ function addLanguageColor(content:string) {
 
 }
 
-const getMarkdownHTML = (content) => {
-  let codeBlock = [...content.matchAll(/~~~~(\w+)?\s([\s\S]*?)~~~~/g)]
+const getMarkdownHTML =  (content:string) => {
+  const codeBlock = [...content.matchAll(/~~~~(\w+)?\s([\s\S]*?)~~~~/g)]
 
   codeBlock.forEach((matchedTitle) => {
     content = content.replace(
@@ -65,24 +65,24 @@ const getMarkdownHTML = (content) => {
     )
   })
 
-  let preBlocks = [
+  const preBlocks = [
     ...content.matchAll(/<pre class="resultOFTextAreaMarkdown_pre.*?">([\s\S]*?)<\/pre>/g),
   ]
   preBlocks.forEach((block, index) => {
     content = content.replace(block[0], `{{PRE_BLOCK_${index}}}`)
   })
 
-  let html = marked(content)
+  let html: string =  marked(content)
 
-  let titles1 = [...html.matchAll(/#\s+([^\n]+)/g)]
+  let titles1: RegExpExecArray[] = [...html.matchAll(/#\s+([^\n]+)/g)]
   titles1.forEach((matchedTitle) => {
     html = html.replace(matchedTitle[0], `<h1>${matchedTitle[1]}</h1>`)
   })
-  let titles2 = [...html.matchAll(/##\s+([^\n]+)/g)]
+  let titles2: RegExpExecArray[] = [...html.matchAll(/##\s+([^\n]+)/g)]
   titles2.forEach((matchedTitle) => {
     html = html.replace(matchedTitle[0], `<h2>${matchedTitle[1]}</h2>`)
   })
-  let titles3 = [...html.matchAll(/###\s+([^\n]+)/g)]
+  let titles3: RegExpExecArray[] = [...html.matchAll(/###\s+([^\n]+)/g)]
   titles3.forEach((matchedTitle) => {
     html = html.replace(matchedTitle[0], `<h3>${matchedTitle[1]}</h3>`)
   })

@@ -6,6 +6,7 @@ import type { Question } from '@/type/Question.ts'
 import ListOfUsersView from '@/components/listOfUsersView.vue'
 import ListOfResponseView from '@/components/listOfResponseView.vue'
 import type { User } from '@/type/User.ts'
+import type { ApiResponse } from '@/type/ApiResponse.ts'
 
 
 
@@ -15,7 +16,8 @@ const props = defineProps<{
   changeRoute: (routePath: string, subpageName: string, idNumber: number | null) => void
 }>()
 const { api } = useApi()
-let data = ref()
+
+const data = ref<Question[] | User[] | ApiResponse[]>([])
 let subpageOfProfile = ref('questions')
 
 
@@ -68,7 +70,7 @@ changeSubpage(subpageOfProfile.value)
 
     <list-of-users-view   v-if="subpageOfProfile =='followers'  && data "  :change-route="changeRoute" :own-id="profile.id" :listOfUsersData="data as User[]" user-type="followers"></list-of-users-view>
 
-    <list-of-response-view  v-if="subpageOfProfile =='responses'  && data"  :change-route="changeRoute"  :list-of-response="data as Response[] "></list-of-response-view>
+    <list-of-response-view  v-if="subpageOfProfile =='responses'  && data"  :change-route="changeRoute"  :listOfResponse="data as ApiResponse[] "></list-of-response-view>
 
   </div>
 </template>

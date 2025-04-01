@@ -31,7 +31,7 @@ async function onSubmit() {
   }
   console.log(state)
   const res = await register(state)
-  if (res.error) {
+  if (res && res.error) {
     error.value = res.error
   }
 }

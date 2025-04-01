@@ -1,10 +1,7 @@
 <script setup lang="ts">
 
 import "./contentTextAreaMarkdown.css"
-defineProps({
-  link: String,
-  valueText: String,
-})
+
 const model = defineModel<string>()
 
 /*  MARKDOWN
@@ -21,7 +18,7 @@ const model = defineModel<string>()
 
 
 const addMarkdown = function (markStyle:string) {
-  const textarea = document.querySelector(".contentTextAreaMarkdown textarea");
+const textarea : HTMLTextAreaElement | null = document.querySelector(".contentTextAreaMarkdown textarea");
 
   if (!textarea) {
     console.error("Textarea not found!");
@@ -30,7 +27,7 @@ const addMarkdown = function (markStyle:string) {
 
   const start = textarea.selectionStart;
   const end = textarea.selectionEnd;
-  const text = textarea.value;
+  const text = textarea.innerHTML;
 
   /* if start!=end we have selection text */
   console.log(start, end, text);
@@ -74,10 +71,9 @@ const addMarkdown = function (markStyle:string) {
 
 
   const updatedText = text.slice(0, start) + formattedText + text.slice(end)
-  textarea.value = updatedText
+  textarea.innerHTML = updatedText
   textarea.setSelectionRange(start, start + formattedText.length);
   textarea.focus();
-  setValue(name, updatedText);
 
 }
 
