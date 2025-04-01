@@ -5,11 +5,14 @@ import { reactive, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import ContentTextAreaMarkdown from '@/components/markdown/contentTextAreaMarkdown.vue'
 import ResultOfTextAreaMarkdown from '@/components/markdown/resultOfTextAreaMarkdown.vue'
+import type { Question } from '@/type/Question.ts'
+
 const { api } = useApi()
 const router = useRouter()
 const props = defineProps<{
-  classname: string;
-  id: number;
+  classname: string
+  id: number
+  changeAddResponse:()=>void
 }>()
 
 const error = ref()
@@ -28,9 +31,7 @@ Thank you for your detailed response!
   question: 0,
 })
 
-
-
-const toggleWidget = function() {
+const toggleWidget = function () {
   const widget = document.querySelector('.questionPage .widgetQuestionSettings')
   if (!widget) {
     return
@@ -38,43 +39,38 @@ const toggleWidget = function() {
   if (widget.style.display === 'flex') {
     widget.style.display = 'none'
   } else {
-
     widget.style.display = 'flex'
   }
 }
 
 const onSubmit = async () => {
-  response.value.question = props.id
+  response.question = props.id
+  response.contentHTML = document.querySelector('.resultOFTextAreaMarkdown')?.innerHTML || ''
+
   try {
     console.log(response)
-    // const res3 = await api('api/response/new', response.value, 'POST')
 
+    const res3 = await api('api/response/new', response, 'POST')
+    console.log(await res3.json())
+    props.changeAddResponse()
   } catch (err) {
     console.log(err)
   }
 }
-
 </script>
 <template>
-  <div
-    :class="props.classname"
-  >
+  <div :class="props.classname">
     <form action="" @submit.prevent="onSubmit" class="basicForm">
-
-      <span v-if="error" class="error">{{error}}</span>
+      <span v-if="error" class="error">{{ error }}</span>
 
       <label>
         Your response
-        <content-text-area-markdown v-model="response.content" ></content-text-area-markdown>
+        <content-text-area-markdown v-model="response.content"></content-text-area-markdown>
       </label>
-       <span>How it will appear : </span>
-        <ResultOfTextAreaMarkdown classname="" :text="response.content"></ResultOfTextAreaMarkdown>
+      <span>How it will appear : </span>
+      <ResultOfTextAreaMarkdown classname="" :text="response.content"></ResultOfTextAreaMarkdown>
 
-        <button type="submit" class="button1" value="Submit">Create</button>
-
-
+      <button type="submit" class="button1" value="Submit">Create</button>
     </form>
-
-
   </div>
 </template>
