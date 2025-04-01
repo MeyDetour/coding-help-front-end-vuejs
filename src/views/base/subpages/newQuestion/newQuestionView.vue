@@ -2,16 +2,18 @@
 import CustomTitle from '@/components/CustomTitle.vue'
 import './style.css'
 import { marked } from 'marked'
-import { reactive, ref } from 'vue'
+import { reactive, ref, watch } from 'vue'
 import ContentTextAreaMarkdown from '@/components/markdown/contentTextAreaMarkdown.vue'
 import ResultOfTextAreaMarkdown from '@/components/markdown/resultOfTextAreaMarkdown.vue'
 import useApi from '@/composables/useApi.ts'
 import type { Theme } from '@/type/Theme.ts'
 import { useRouter } from 'vue-router'
+import type { Question } from '@/type/Question.ts'
 
 const { api } = useApi()
 const router = useRouter()
 const error = ref<null | string>(null)
+const redirectionLink = ref<null | string>(null)
 const newQuestion = reactive({
   title: 'How do I work?',
   contentHTML: '',
@@ -39,14 +41,14 @@ const themes = ref<Theme[]>([])
 let displayOwerview = ref(false)
 let isMobile = ref(window.innerWidth < 700)
 
-
-
 getThemes()
 
 async function getThemes() {
   const response = await api('api/themes', null, 'GET')
+
   if (response) {
     themes.value = (await response.json()) as Theme[]
+
     console.log(themes.value)
   }
 }
@@ -60,16 +62,16 @@ const addBackslashN = function (content) {
 const onSubmit = async () => {
   console.log(newQuestion)
   console.log(newTheme)
-  let finalData ={
-    'title': newQuestion.title,
-    'contentHTML': '',
-    'content': '',
-    'themes': [],
+  let finalData = {
+    title: newQuestion.title,
+    contentHTML: '',
+    content: '',
+    themes: [],
   }
   let newThemeName = newTheme.name.replace(/\s+/g, '')
 
-
   /* if no theme provided */
+
   if (!newThemeName && newQuestion.themes.length == 0) {
     error.value = 'You must associate to the theme'
     return
@@ -87,21 +89,17 @@ const onSubmit = async () => {
   /* TO CREATE ONE THEME - IF NEEDED*/
   if (newThemeName !== '') {
     try {
-      let res = await api('api/theme/new', { name: newThemeName } ,'POST')
-      if (res){
+      let res = await api('api/theme/new', { name: newThemeName }, 'POST')
+      if (res) {
         res = await res.json()
-
-        finalData.themes.push( res.id )
-
+        finalData.themes.push(res.id)
       }
-
     } catch (err) {
-     error.value ='Error while creating theme : ' + err
+      error.value = 'Error while creating theme : ' + err
     }
   }
 
   /* if theme is found add it to themes list */
-
 
   //replace all br as \n
   let html = document.querySelector('.resultOFTextAreaMarkdown')?.innerHTML || ''
@@ -111,36 +109,42 @@ const onSubmit = async () => {
   finalData.content = markdown
   finalData.contentHTML = html
 
-    console.log(finalData)
+  console.log(finalData)
 
   try {
-    let res = await api('api/question/new', finalData, 'POST')
+    const res = await api('api/question/new', finalData, 'POST')
     console.log(res)
-    if(res){
-
-      res = await res.json()
-      console.log(res)
-      return  router.push('/private/question/' + res.id)
+    if (res) {
+      const question = (await res.json()) as Question
+      console.log(question)
+      console.log(question.id)
+      await router.push('/private/question/' + question.id)
     }
   } catch (err) {
     if (err instanceof Error) {
       // Vérifie si l'erreur est un objet de type `Response` (provenant du fetch)
       if ('status' in err && err.status === 409) {
-        error.value = "A question with similar content already exists.";
+        error.value = 'A question with similar content already exists.'
       } else {
-        error.value = 'Error while creating question: ' + (err.message || 'Unknown error');
+        error.value = 'Error while creating question: ' + (err.message || 'Unknown error')
       }
     } else {
-      error.value = 'Error while creating question: Unexpected error occurred';
-    }}
+      error.value = 'Error while creating question: Unexpected error occurred'
+    }
+  }
   console.log('===========================================================')
 }
-
 </script>
 
 <template>
-  <div v-if="themes.length > 0 && (!isMobile ||  (isMobile && !displayOwerview) )" class="left">
-    <img class="overviewIcon" @click="()=>displayOwerview=true" src="../../../../assets/icon/eye.svg" alt="">
+  <div v-if="!isMobile || (isMobile && !displayOwerview)" class="left">
+    <img
+      class="overviewIcon"
+      v-if="isMobile"
+      @click="() => (displayOwerview = true)"
+      src="../../../../assets/icon/eye.svg"
+      alt=""
+    />
     <form @submit.prevent="onSubmit" class="basicForm">
       <span v-if="error" class="error">{{ error }}</span>
 
@@ -151,9 +155,7 @@ const onSubmit = async () => {
 
       <label>
         Content
-        <content-text-area-markdown
-          v-model="newQuestion.content"
-        ></content-text-area-markdown>
+        <content-text-area-markdown v-model="newQuestion.content"></content-text-area-markdown>
       </label>
 
       <fieldset>
@@ -169,6 +171,7 @@ const onSubmit = async () => {
 
           <span>{{ theme.name }}</span>
         </div>
+        <span v-if="themes.length === 0">No themes created</span>
       </fieldset>
       <label>
         Other theme
@@ -178,12 +181,23 @@ const onSubmit = async () => {
       <button type="submit" class="button1" value="Submit">Create</button>
     </form>
   </div>
-<!--  if question has content and title and themes request is sucess -->
-<!--   for mobile : if left is close -->
-  <div class="right" v-if="(newQuestion.content || (newQuestion.title !== ''  ))&& themes.length > 0 && (!isMobile ||  (isMobile && displayOwerview) )">
-
-    <h3 v-if="newQuestion.title !== ''">{{newQuestion.title}}</h3>
-    <img class="closeOverviewIcon" @click="()=>displayOwerview=false" src="../../../../assets/icon/form.svg" alt="">
+  <!--  if question has content and title and themes request is sucess -->
+  <!--   for mobile : if left is close -->
+  <div
+    class="right"
+    v-if="
+      (newQuestion.content || newQuestion.title !== '') &&
+      (!isMobile || (isMobile && displayOwerview))
+    "
+  >
+    <h3 v-if="newQuestion.title !== ''">{{ newQuestion.title }}</h3>
+    <img
+      v-if="isMobile"
+      class="closeOverviewIcon"
+      @click="() => (displayOwerview = false)"
+      src="../../../../assets/icon/form.svg"
+      alt=""
+    />
 
     <result-of-text-area-markdown
       v-if="newQuestion.content"
