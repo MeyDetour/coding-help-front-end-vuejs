@@ -1,6 +1,6 @@
 <script setup lang="ts">
 
-import { nextTick, watch } from 'vue'
+import { nextTick, ref, watch } from 'vue'
 import "./contentTextAreaMarkdown.css"
 import { marked } from 'marked'
 
@@ -20,6 +20,7 @@ classname:string,
     *   h3 : ###
     *
     * */
+const htmlContent = ref<string>('') // Stocke le HTML transformé
 
 
 function addLanguageColor(content:string) {
@@ -55,7 +56,7 @@ function addLanguageColor(content:string) {
 
 }
 
-const getMarkdownHTML =  (content:string) => {
+const getMarkdownHTML =  async (content: string) => {
   const codeBlock = [...content.matchAll(/~~~~(\w+)?\s([\s\S]*?)~~~~/g)]
 
   codeBlock.forEach((matchedTitle) => {
@@ -72,7 +73,7 @@ const getMarkdownHTML =  (content:string) => {
     content = content.replace(block[0], `{{PRE_BLOCK_${index}}}`)
   })
 
-  let html: string =  marked(content)
+  let html: string = await marked(content)
 
   let titles1: RegExpExecArray[] = [...html.matchAll(/#\s+([^\n]+)/g)]
   titles1.forEach((matchedTitle) => {
@@ -89,13 +90,17 @@ const getMarkdownHTML =  (content:string) => {
   preBlocks.forEach((block, index) => {
     html = html.replace(`{{PRE_BLOCK_${index}}}`, addLanguageColor(block[0]))
   })
-
-  return html
+  htmlContent.value = html
 }
+
+watch(() => props.text, (newText) => {
+  getMarkdownHTML(newText)
+}, { immediate: true }) // Exécuter au premier rendu
+
 
 </script>
   <template>
-        <div :class="'resultOFTextAreaMarkdown ' +classname" v-html="getMarkdownHTML(text)">
+        <div :class="'resultOFTextAreaMarkdown ' +classname" v-html="htmlContent">
 
         </div>
 
