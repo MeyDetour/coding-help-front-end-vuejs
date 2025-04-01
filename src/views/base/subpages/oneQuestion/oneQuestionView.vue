@@ -2,7 +2,7 @@
 import './style.css'
 import './response.css'
 import useApi from '@/composables/useApi.ts'
-import { ref } from 'vue'
+import { ref, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import type { Question } from '@/type/Question.ts'
 import CustomImage from '@/components/CustomImage.vue'
@@ -13,7 +13,7 @@ import { useSecurity } from '@/stores/securityStore.ts'
 
 const { api } = useApi()
 const router = useRouter()
-const security = useSecurity()
+const { showWidget } = useSecurity()
 const props = defineProps<{
   id: number
   changeRoute: (routePath: string, subpageName: string, idNumber: number | null) => void
@@ -39,6 +39,10 @@ const question = ref<Question | null>(null)
 const addResponse = ref(false)
 const displayWidgetForQuestion = ref(false)
 const displayWidgetForResponseId = ref(0)
+
+watch(addResponse, (newValue, oldValue) => {
+  getQuestion()
+})
 if (props.id) {
   getQuestion()
 } else {
@@ -47,14 +51,16 @@ if (props.id) {
 
 // To add new question
 const isMobile = ref(window.innerWidth <= 700)
-const deleteQuestion = function () {
+const deleteQuestion = () => {
   if (!props.id) {
     return
   }
-  security(
+  showWidget(
     'Do you really want to delete this question ? ',
     '/private/question/' + props.id,
     'api/question/' + props.id,
+    'DELETE',
+    null
   )
 }
 
@@ -62,6 +68,10 @@ async function getQuestion() {
   const response = await api('api/question/' + props.id, null, 'GET')
   question.value = (await response.json()) as Question
   console.log(question.value)
+}
+
+function changeAddResponse() {
+  addResponse.value = false
 }
 </script>
 <template>
@@ -82,32 +92,40 @@ async function getQuestion() {
       <img v-if="!question.isValidate" src="../../../../assets/icon/bad.svg" alt="icon false" />
 
       <!--   TO EDIT AND DELETE QUESTION IF YOUR OWNER    -->
-      <div style="position: relative; align-items: center; cursor: pointer" v-if="ownId==question.author" >
-
-        <img @click="()=>{displayWidgetForQuestion = !displayWidgetForQuestion}" src="../../../../assets/icon/settings.svg" alt="icon settings" />
-        <div v-if="displayWidgetForQuestion" class="widgetQuestionSettings" >
+      <div
+        style="position: relative; align-items: center; cursor: pointer"
+        v-if="ownId == question.author.id"
+      >
+        <img
+          @click="
+            () => {
+              displayWidgetForQuestion = !displayWidgetForQuestion
+            }
+          "
+          src="../../../../assets/icon/settings.svg"
+          alt="icon settings"
+        />
+        <div v-if="displayWidgetForQuestion" class="widgetQuestionSettings">
           <RouterLink to="">Edit</RouterLink>
           <span @click="deleteQuestion">Delete</span>
         </div>
       </div>
-
-     </div>
+    </div>
   </div>
 
   <div v-if="question && props.id" class="row">
-
-
     <!--     QUESTION      -->
-    <div v-if="!isMobile || (isMobile && addResponse)" :class="`left ${addResponse ? 'left-open' : ' '}`">
+    <div
+      v-if="!isMobile || (isMobile && addResponse)"
+      :class="`left ${addResponse ? 'left-open' : ' '}`"
+    >
       <!--   Author   -->
       <div class="authorSection">
         <custom-image :link="question.author.image"></custom-image>
         <span class="md-text">{{ question.author.username }}</span>
       </div>
 
-
       <div class="questionContent">
-
         <!--    QUESTION CONTENT    -->
         <result-of-text-area-markdown
           classname=""
@@ -119,7 +137,7 @@ async function getQuestion() {
           <div class="hr"></div>
 
           <!--    One response     -->
-          <details class="oneResponse"  >
+          <details class="oneResponse">
             <summary>
               <div>
                 <CustomImage :link="response.author_data.image"></CustomImage>
@@ -137,23 +155,36 @@ async function getQuestion() {
                   <span class="sm-text">{{ response.downvote_count }}</span>
                   <img src="../../../../assets/icon/bad.svg" alt="icon false" />
                 </div>
-                <div
-
-                  style="position: relative; align-items: center; cursor: pointer"
-                >
+                <div style="position: relative; align-items: center; cursor: pointer">
                   <img
-                    @click="()=>{
-                      if(displayWidgetForResponseId == response.id){
-                        displayWidgetForResponseId = 0
-                      }else{
-                      displayWidgetForResponseId = response.id
+                    @click="
+                      () => {
+                        if (displayWidgetForResponseId == response.id) {
+                          displayWidgetForResponseId = 0
+                        } else {
+                          displayWidgetForResponseId = response.id
+                        }
                       }
-                    }"
+                    "
                     src="../../../../assets/icon/settings.svg"
                     alt="icon settings"
                   />
-                  <div v-if="displayWidgetForResponseId == response.id" class="widgetQuestionSettings">
-                    <span @click="security.showWidget('Do you really want to delete you question ?','/private/question/'+question.id,'api/response/'+response.id,'DELETE',null)">Delete</span>
+                  <div
+                    v-if="displayWidgetForResponseId == response.id"
+                    class="widgetQuestionSettings"
+                  >
+                    <span
+                      @click="
+                        security.showWidget(
+                          'Do you really want to delete you question ?',
+                          '/private/question/' + question.id,
+                          'api/response/' + response.id,
+                          'DELETE',
+                          null,
+                        )
+                      "
+                      >Delete</span
+                    >
                   </div>
                 </div>
               </div>
@@ -163,8 +194,6 @@ async function getQuestion() {
             </div>
           </details>
           <!--     END OF ONE RESPONSES     -->
-
-
         </template>
         <!--     END OF LIST OF RESPONSES     -->
 
@@ -176,9 +205,9 @@ async function getQuestion() {
     </div>
     <!--     END OF QUESTION      -->
 
-
     <!--        NEW RESPONSE      -->
     <new-response-view
+      :changeAddResponse="changeAddResponse"
       v-if="question && props.id"
       :classname="`right ${addResponse ? 'd-flex' : 'd-none'}`"
       :id="question.id"
