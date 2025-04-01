@@ -13,7 +13,6 @@ import UsersView from '@/views/base/subpages/users/usersView.vue'
 import { useSecurity } from '@/stores/securityStore.ts'
 import SecurityWidgetView from '@/components/securityWidgetView.vue'
 import SettingsView from '@/views/base/subpages/settings/settingsView.vue'
-import UserView from '@/views/base/subpages/oneUser/userView.vue'
 import OneUserView from '@/views/base/subpages/oneUser/oneUserView.vue'
 
 const { logout } = useAuth()
