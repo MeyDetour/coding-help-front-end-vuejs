@@ -8,7 +8,11 @@ const error = ref('')
 const state = reactive({
   email: 'mey@meydeeetour.com',
   password: 'meymey',
-  username: 'username',
+  username: 'meymey',
+  last_name: '',
+  first_name: '',
+  profession: '',
+  phone_number: '',
 })
 
 function validEmail(email: string): boolean {
@@ -16,7 +20,7 @@ function validEmail(email: string): boolean {
   return regex.test(email)
 }
 
-function onSubmit() {
+async function onSubmit() {
   if (!validEmail(state.email)) {
     error.value = 'Invalid email address'
     return
@@ -26,7 +30,10 @@ function onSubmit() {
     return
   }
   console.log(state)
-  register(state)
+  const res = await register(state)
+  if (res.error) {
+    error.value = res.error
+  }
 }
 </script>
 <template>
@@ -49,7 +56,7 @@ function onSubmit() {
       <input placeholder="Your password" type="password" v-model="state.password" />
     </label>
 
-    <button type="submit" class="button1" value="Submit">Login</button>
+    <button type="submit" class="button1" value="Submit">Register</button>
     <RouterLink to="/login" class="xsm-text">You already have account ? Login</RouterLink>
   </form>
 </template>
