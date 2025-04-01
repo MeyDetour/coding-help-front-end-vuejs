@@ -6,8 +6,8 @@ import useAuth from '@/composables/useAuth.ts'
 const { login } = useAuth()
 const error = ref('')
 const state = reactive({
-  email: 'mey@meydeeetour.com',
-  password: 'meymey',
+  email:"mey@meydeeetour.com",
+  password:"meymey"
 })
 
 function validEmail(email: string): boolean {
@@ -15,7 +15,7 @@ function validEmail(email: string): boolean {
   return regex.test(email)
 }
 
-function onSubmit() {
+async function onSubmit() {
   if (!validEmail(state.email)) {
     error.value = 'Invalid email address'
     return
@@ -25,8 +25,13 @@ function onSubmit() {
     return
   }
   console.log(state)
-  login(state)
+  const res = await login(state)
+  if (res.error) {
+    error.value = res.error
+  }
 }
+
+console.log(error)
 </script>
 <template>
   <form @submit.prevent="onSubmit" class="loginPage basicForm">
