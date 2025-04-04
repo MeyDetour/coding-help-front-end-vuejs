@@ -34,6 +34,7 @@ nav > div {
     display: flex;
     flex-direction: row;
     align-items: center;
+    width: 100%;
 }
 
 nav div img {
@@ -136,6 +137,15 @@ nav .closeSVG{
     width: 30px;
     left: 31px;
     top: 20px;
+}
+
+@media only screen and (max-width: 1500px) {
+nav{
+    width: 20vw;
+}
+    .content{
+        width: 80vw;
+    }
 }
 
 @media only screen and (max-width: 700px) {
